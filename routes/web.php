@@ -17,16 +17,17 @@ Route::get('/', function () {
 
 Route::middleware(['auth', 'verified'])->group(function () {
 
-    // ✅ Dashboard now uses controller
+
     Route::get('/dashboard', [BookController::class, 'dashboard'])
         ->name('dashboard');
 
-    // Books CRUD
     Route::get('/dashboard/books', [BookController::class, 'index'])->name('books.index');
     Route::get('/dashboard/books/create', [BookController::class, 'create'])->name('books.create');
     Route::post('/dashboard/books', [BookController::class, 'store'])->name('books.store');
+    Route::put('/dashboard/books/{book}', [BookController::class, 'update'])->name('books.update');
+    Route::delete('/dashboard/books/{book}', [BookController::class, 'destroy'])->name('books.destroy');
 
-    // Profile
+
     Route::get('/profile', [ProfileController::class, 'edit'])->name('profile.edit');
     Route::patch('/profile', [ProfileController::class, 'update'])->name('profile.update');
     Route::delete('/profile', [ProfileController::class, 'destroy'])->name('profile.destroy');

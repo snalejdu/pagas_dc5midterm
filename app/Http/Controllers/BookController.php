@@ -20,24 +20,53 @@ class BookController extends Controller
         return Inertia::render('Dashboard/CreateBook');
     }
 
-    public function store(Request $request)
-    {
-        $request->validate([
-            'title' => 'required',
-            'author' => 'required',
-            'isbn' => 'required|unique:books,isbn',
-            'published_at' => 'required|date',
-        ]);
+   public function store(Request $request)
+{
+    $request->validate([
+        'title' => 'required',
+        'author' => 'required',
+        'isbn' => 'required|unique:books,isbn',
+        'published_at' => 'required|date',
+    ]);
 
-        Book::create($request->only([
-            'title',
-            'author',
-            'isbn',
-            'published_at'
-        ]));
+    Book::create($request->only([
+        'title',
+        'author',
+        'isbn',
+        'published_at'
+    ]));
 
-        return redirect()->route('books.index');
-    }
+    // Stay on the same page instead of redirecting to books.index
+    return redirect()->back();
+}
+
+public function update(Request $request, Book $book)
+{
+    $request->validate([
+        'title' => 'required',
+        'author' => 'required',
+        'isbn' => 'required|unique:books,isbn,' . $book->id,
+        'published_at' => 'required|date',
+    ]);
+
+    $book->update($request->only([
+        'title',
+        'author',
+        'isbn',
+        'published_at'
+    ]));
+
+    return redirect()->back();
+}
+
+public function destroy(Book $book)
+{
+    $book->delete();
+
+    return redirect()->back();
+}
+
+
 
 
     public function dashboard()
