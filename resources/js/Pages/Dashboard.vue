@@ -1,12 +1,10 @@
 <script setup>
 import AuthenticatedLayout from '@/Layouts/AuthenticatedLayout.vue';
-import { Head } from '@inertiajs/vue3';
-import { defineProps } from 'vue';
+import { Head, usePage } from '@inertiajs/vue3';
 
-// Get user data passed from web.php
-const props = defineProps({
-  user: Object
-});
+const page = usePage();
+const user = page.props.auth.user;
+const books = page.props.books ?? [];
 </script>
 
 <template>
@@ -20,23 +18,45 @@ const props = defineProps({
     </template>
 
     <div class="py-12">
-      <div class="mx-auto max-w-7xl sm:px-6 lg:px-8">
-        <div class="overflow-hidden bg-white shadow-sm sm:rounded-lg">
-          <div class="p-6 text-gray-900">
-            <!-- Display User's Name and Email -->
-            <div>
-              <p><strong>Name:</strong> {{ props.user.name }}</p>
-              <p><strong>Email:</strong> {{ props.user.email }}</p>
-            </div>
+      <div class="mx-auto max-w-7xl sm:px-6 lg:px-8 space-y-6">
 
-          
-          </div>
+        <!-- User Info -->
+        <div class="bg-white shadow-sm sm:rounded-lg p-6">
+          <p><strong>Name:</strong> {{ user.name }}</p>
+          <p><strong>Email:</strong> {{ user.email }}</p>
         </div>
+
+        <!-- Books Section -->
+        <div class="bg-white shadow-sm sm:rounded-lg p-6">
+          <h3 class="text-lg font-bold mb-4">Books</h3>
+
+          <table class="w-full border">
+            <thead class="bg-gray-100">
+              <tr>
+                <th class="border px-3 py-2">Title</th>
+                <th class="border px-3 py-2">Author</th>
+                <th class="border px-3 py-2">ISBN</th>
+                <th class="border px-3 py-2">Published</th>
+              </tr>
+            </thead>
+            <tbody>
+              <tr v-for="book in books" :key="book.id">
+                <td class="border px-3 py-2">{{ book.title }}</td>
+                <td class="border px-3 py-2">{{ book.author }}</td>
+                <td class="border px-3 py-2">{{ book.isbn }}</td>
+                <td class="border px-3 py-2">{{ book.published_at }}</td>
+              </tr>
+
+              <tr v-if="books.length === 0">
+                <td colspan="4" class="text-center py-4 text-gray-500">
+                  No books available.
+                </td>
+              </tr>
+            </tbody>
+          </table>
+        </div>
+
       </div>
     </div>
   </AuthenticatedLayout>
 </template>
-
-<style scoped>
-/* Optional: Add custom styles here */
-</style>

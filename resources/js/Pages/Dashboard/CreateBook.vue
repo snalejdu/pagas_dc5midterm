@@ -62,5 +62,5 @@ const submit = () => {
 </template>
 
 <style scoped>
-/* Optional: Add custom styles here */
+
 </style>
